@@ -1,5 +1,5 @@
 # kwin4_effects_foldpopups
-kwin popups effect likes win 11
+kwin popups effect likes win 11 and cinnamon
 # preview
 ![foldpopus](https://i0.hdslb.com/bfs/new_dyn/bdd6f881c2068b98ac0fbbdde4319a592008726064.gif)
 
