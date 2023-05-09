@@ -10,7 +10,16 @@ var blacklist = [
     // The lockscreen isn't a popup window
     "kscreenlocker_greet kscreenlocker_greet",
     // KDE Plasma splash screen has to be animated only by the login effect.
-    "ksplashqml ksplashqml"
+    "ksplashqml ksplashqml",
+    "ksplashqml ksplash",
+    // Spectacle screenshot utility
+    "spectacle spectacle",
+    // Task Switchers
+    "kwin_x11 kwin",
+    // Kate was having weird graphical glitches
+    "kate kate",
+    // Unity Game Engine also had graphical glitches
+    "Unity Unity",
 ];
 
 var mouse_x = 0;
@@ -20,6 +29,11 @@ function isPopupWindow(window) {
     // If the window is blacklisted, don't animate it.
     if (blacklist.indexOf(window.windowClass) != -1) {
         return false;
+    }
+    
+    // Jetbrains programs also had graphical glitches
+    if(window.windowClass.startsWith('jetbrains')) {
+      return false;
     }
 
     // Animate combo box popups, tooltips, popup menus, etc.
