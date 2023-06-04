@@ -16,10 +16,6 @@ var blacklist = [
     "spectacle spectacle",
     // Task Switchers
     "kwin_x11 kwin",
-    // Kate was having weird graphical glitches
-    "kate kate",
-    // Unity Game Engine also had graphical glitches
-    "Unity Unity",
 ];
 
 var mouse_x = 0;
@@ -113,7 +109,12 @@ var fadingPopupsEffect = {
         window.foldAnimation1 = animate({
             window: window,
             duration: 300,
-            animations: [{
+            animations: [
+                {
+                type: Effect.Opacity,
+                to: 1.0,
+                from: 1.0},
+                {
                 type: Effect.Size,
                 to: {
                     value1: window.width,
@@ -156,7 +157,11 @@ var fadingPopupsEffect = {
             window.foldAnimation1 = animate({
             window: window,
             duration: 300,
-            animations: [{
+            animations: [
+                {
+                type: Effect.Opacity,
+                to: 1.0,
+                from: 1.0},{
                 type: Effect.Size,
                 to: {
                     value1: window.width,
