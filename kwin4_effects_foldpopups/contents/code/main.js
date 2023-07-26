@@ -1,5 +1,3 @@
-
-
 "use strict";
 
 var blacklist = [
@@ -18,16 +16,15 @@ var blacklist = [
     "kwin_x11 kwin",
 ];
 
-
 function isPopupWindow(window) {
     // If the window is blacklisted, don't animate it.
     if (blacklist.indexOf(window.windowClass) != -1) {
         return false;
     }
-    
+
     // Jetbrains programs also had graphical glitches
-    if(window.windowClass.startsWith('jetbrains')) {
-      return false;
+    if (window.windowClass.startsWith("jetbrains")) {
+        return false;
     }
 
     // Animate combo box popups, tooltips, popup menus, etc.
@@ -60,16 +57,21 @@ function isPopupWindow(window) {
     // this one. In addition to popups, this effect also animates some
     // special windows(e.g. notifications) because the monolithic version
     // was doing that.
-    if (window.dock || window.splash || window.toolbar
-            || window.notification || window.onScreenDisplay
-            || window.criticalNotification) {
+    if (
+        window.dock ||
+        window.splash ||
+        window.toolbar ||
+        window.notification ||
+        window.onScreenDisplay ||
+        window.criticalNotification
+    ) {
         return true;
     }
 
     return false;
 }
 
-
+let openedAt = 0;
 
 var fadingPopupsEffect = {
     loadConfig: function () {
@@ -89,39 +91,42 @@ var fadingPopupsEffect = {
         if (!effect.grab(window, Effect.WindowAddedGrabRole)) {
             return;
         }
+        openedAt = effects.cursorPos.y;
         window.setData(Effect.WindowForceBlurRole, true);
         window.foldAnimation1 = animate({
             window: window,
             duration: 300,
             animations: [
                 {
-                type: Effect.Opacity,
-                to: 1.0,
-                from: 1.0},
+                    type: Effect.Opacity,
+                    to: 1.0,
+                    from: 1.0,
+                },
                 {
-                type: Effect.Size,
-                to: {
-                    value1: window.width,
-                    value2: window.height
+                    type: Effect.Size,
+                    to: {
+                        value1: window.width,
+                        value2: window.height,
+                    },
+                    from: {
+                        value1: window.width,
+                        value2: 0,
+                    },
+                    curve: QEasingCurve.OutCubic,
                 },
-                from: {
-                    value1: window.width,
-                    value2: 0
+                {
+                    type: Effect.Translation,
+                    to: {
+                        value1: 0,
+                        value2: 0,
+                    },
+                    from: {
+                        value1: 0,
+                        value2: openedAt - window.y - (window.height - 0) / 2,
+                    },
+                    curve: QEasingCurve.OutCubic,
                 },
-                curve: QEasingCurve.OutCubic
-            }, {
-                type: Effect.Translation,
-                to: {
-                    value1: 0,
-                    value2: 0
-                },
-                from: {
-                    value1: 0,
-                    value2: effects.cursorPos.y - window.y -
-                            (window.height - 0) / 2
-                },
-                curve: QEasingCurve.OutCubic
-            }]
+            ],
         });
     },
     slotWindowClosed: function (window) {
@@ -139,39 +144,41 @@ var fadingPopupsEffect = {
         }
         window.setData(Effect.WindowForceBlurRole, true);
 
-            window.foldAnimation1 = animate({
+        window.foldAnimation1 = animate({
             window: window,
             duration: 300,
             animations: [
                 {
-                type: Effect.Opacity,
-                to: 1.0,
-                from: 1.0},{
-                type: Effect.Size,
-                to: {
-                    value1: window.width,
-                    value2: 0
+                    type: Effect.Opacity,
+                    to: 1.0,
+                    from: 1.0,
                 },
-                from: {
-                    value1: window.width,
-                    value2: window.height
+                {
+                    type: Effect.Size,
+                    to: {
+                        value1: window.width,
+                        value2: 0,
+                    },
+                    from: {
+                        value1: window.width,
+                        value2: window.height,
+                    },
+                    curve: QEasingCurve.OutCubic,
                 },
-                curve: QEasingCurve.OutCubic
-            }, {
-                type: Effect.Translation,
-                to: {
-                    value1: 0,
-                    value2: effects.cursorPos.y - window.y -
-                            (window.height - 0) / 2
+                {
+                    type: Effect.Translation,
+                    to: {
+                        value1: 0,
+                        value2: openedAt - window.y - (window.height - 0) / 2,
+                    },
+                    from: {
+                        value1: 0,
+                        value2: 0,
+                    },
+                    curve: QEasingCurve.OutCubic,
                 },
-                from: {
-                    value1: 0,
-                    value2: 0
-                },
-                curve: QEasingCurve.OutCubic
-            }]
+            ],
         });
-
     },
     slotWindowDataChanged: function (window, role) {
         if (role == Effect.WindowAddedGrabRole) {
@@ -193,8 +200,10 @@ var fadingPopupsEffect = {
         effect.configChanged.connect(fadingPopupsEffect.loadConfig);
         effects.windowAdded.connect(fadingPopupsEffect.slotWindowAdded);
         effects.windowClosed.connect(fadingPopupsEffect.slotWindowClosed);
-        effects.windowDataChanged.connect(fadingPopupsEffect.slotWindowDataChanged);
-    }
+        effects.windowDataChanged.connect(
+            fadingPopupsEffect.slotWindowDataChanged,
+        );
+    },
 };
 
 fadingPopupsEffect.init();
