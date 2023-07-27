@@ -92,6 +92,9 @@ var fadingPopupsEffect = {
             return;
         }
         openedAt = effects.cursorPos.y;
+        if(openedAt < window.y) openedAt = window.y;
+        else if(openedAt > window.y + window.height) openedAt = window.y + window.height;
+
         window.setData(Effect.WindowForceBlurRole, true);
         window.foldAnimation1 = animate({
             window: window,
