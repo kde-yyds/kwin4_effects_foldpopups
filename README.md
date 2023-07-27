@@ -1,11 +1,11 @@
 # kwin4_effects_foldpopups
 KWin popup effect like Windows 11 and Cinnamon Desktop Evironment.
 # Preview
-![foldpopus](assets/preview.gif)  
+![foldpopus](readme_assets/preview.gif)  
   
 **Now it supports folding from cursor's position**  
 
-![Fold from cursor Position](assets/folding_from_cursor_position.gif)
+![Fold from cursor Position](readme_assets/folding_from_cursor_position.gif)
 
 
 
