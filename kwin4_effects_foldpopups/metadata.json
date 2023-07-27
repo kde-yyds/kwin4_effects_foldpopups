@@ -1,0 +1,30 @@
+{
+    "KPackageStructure": "KWin/Effect",
+    "KPlugin": {
+        "Name": "Fold Popups",
+        "Name[zh_CN]": "气泡折叠动画",
+        "Description": "Make popups smoothly fold in and out when they are shown or hidden",
+        "Comment[zh_CN]": "气泡信息显示/隐藏时呈现折叠过渡动画",
+        "Category": "Appearance",
+        "Authors": [
+            {
+                "Email": "kde-yyds@qq.com",
+                "Name": "kde-yyds"
+            }
+        ],
+        "Icon": "preferences-system-windows-effect-fadingpopups",
+        "Id": "kwin4_effects_foldpopups",
+        "License": "GPL",
+        "Version": "1.0",
+        "EnabledByDefault": "true",
+        "ServiceTypes": ["KWin/Effect"]
+    },
+    "Type": "Service",
+    "X-KDE-Ordering": "60",
+    "X-KDE-PluginKeyword": "kwin4_effects_foldpopups",
+    "X-KDE-ConfigModule": "kwin/effects/configs/kcm_kwin4_genericscripted",
+    "X-KWin-Config-TranslationDomain": "kwin_effects",
+    "X-Plasma-API": "javascript",
+    "X-Plasma-MainScript": "code/main.js",
+    "X-KDE-ParentApp": "kwin"
+}

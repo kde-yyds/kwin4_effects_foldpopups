@@ -1,5 +1,3 @@
-
-
 "use strict";
 
 var blacklist = [
@@ -91,10 +89,9 @@ function get_fold_constant(window)
     return window.fold_constant;
 }
 
-var fadingPopupsEffect = {
+var foldingPopupsEffect = {
     loadConfig: function () {
-        fadingPopupsEffect.fadeInDuration = animationTime(150) * 1;
-        fadingPopupsEffect.fadeOutDuration = animationTime(150) * 4;
+        
     },
     slotWindowAdded: function (window) {
         if (effects.hasActiveFullScreenEffect) {
@@ -200,14 +197,14 @@ var fadingPopupsEffect = {
         mouse_y = pos.y;
     },
     init: function () {
-        fadingPopupsEffect.loadConfig();
+        foldingPopupsEffect.loadConfig();
 
-        effect.configChanged.connect(fadingPopupsEffect.loadConfig);
-        effects.windowAdded.connect(fadingPopupsEffect.slotWindowAdded);
-        effects.windowClosed.connect(fadingPopupsEffect.slotWindowClosed);
-        effects.mouseChanged.connect(fadingPopupsEffect.updateMouse);
-        effects.windowDataChanged.connect(fadingPopupsEffect.slotWindowDataChanged);
+        effect.configChanged.connect(foldingPopupsEffect.loadConfig);
+        effects.windowAdded.connect(foldingPopupsEffect.slotWindowAdded);
+        effects.windowClosed.connect(foldingPopupsEffect.slotWindowClosed);
+        effects.mouseChanged.connect(foldingPopupsEffect.updateMouse);
+        effects.windowDataChanged.connect(foldingPopupsEffect.slotWindowDataChanged);
     }
 };
 
-fadingPopupsEffect.init();
+foldingPopupsEffect.init();
