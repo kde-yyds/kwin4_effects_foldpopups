@@ -74,8 +74,9 @@ function isPopupWindow(window) {
 let openedAt = 0;
 
 var foldingPopupsEffect = {
+    duration: animationTime(300),
     loadConfig: function () {
-        
+        foldingPopupsEffect = animationTime(effect.readConfig('Duration', 1000));
     },
     slotWindowAdded: function (window) {
         if (effects.hasActiveFullScreenEffect) {
