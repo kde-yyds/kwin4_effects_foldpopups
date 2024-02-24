@@ -7,13 +7,5 @@
     <entry name="Duration" type="UInt">
       <default>300</default>
     </entry>
-    <entry name="Behavior" type="Enum">
-      <choices>
-        <choice name="Automatic"/>
-        <choice name="Fold Downwards"/>
-        <choice name="Fold Upwards"/>
-        <choice name="Fold From Center"/>
-      </choices>
-    </entry>
   </group>
 </kcfg>

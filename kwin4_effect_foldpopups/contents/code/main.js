@@ -73,10 +73,13 @@ function isPopupWindow(window) {
 
 let openedAt = 0;
 
-var foldingPopupsEffect = {
-    duration: animationTime(300),
+var fadingPopupsEffect = {
+    duration: 300,
     loadConfig: function () {
-        foldingPopupsEffect = animationTime(effect.readConfig('Duration', 1000));
+        fadingPopupsEffect.fadeInDuration = animationTime(150) * 1;
+        fadingPopupsEffect.fadeOutDuration = animationTime(150) * 4;
+
+        fadingPopupsEffect.duration = animationTime(effect.readConfig('Duration', 300));
     },
     slotWindowAdded: function (window) {
         if (effects.hasActiveFullScreenEffect) {
@@ -98,7 +101,7 @@ var foldingPopupsEffect = {
         window.setData(Effect.WindowForceBlurRole, true);
         window.foldAnimation1 = animate({
             window: window,
-            duration: 300,
+            duration: fadingPopupsEffect.duration,
             animations: [
                 {
                     type: Effect.Opacity,
@@ -149,7 +152,7 @@ var foldingPopupsEffect = {
 
         window.foldAnimation1 = animate({
             window: window,
-            duration: 300,
+            duration: fadingPopupsEffect.duration,
             animations: [
                 {
                     type: Effect.Opacity,
@@ -198,7 +201,7 @@ var foldingPopupsEffect = {
     },
 
     init: function () {
-        foldingPopupsEffect.loadConfig();
+        fadingPopupsEffect.loadConfig();
 
         effect.configChanged.connect(fadingPopupsEffect.loadConfig);
         effects.windowAdded.connect(fadingPopupsEffect.slotWindowAdded);
@@ -209,4 +212,4 @@ var foldingPopupsEffect = {
     },
 };
 
-foldingPopupsEffect.init();
+fadingPopupsEffect.init();

@@ -22,7 +22,6 @@
     "Type": "Service",
     "X-KDE-Ordering": "60",
     "X-KDE-PluginKeyword": "kwin4_effect_foldpopups",
-    "X-KDE-ConfigModule": "kwin/effects/configs/kcm_kwin4_genericscripted",
     "X-KWin-Config-TranslationDomain": "kwin_effects",
     "X-Plasma-API": "javascript",
     "X-Plasma-MainScript": "code/main.js",
