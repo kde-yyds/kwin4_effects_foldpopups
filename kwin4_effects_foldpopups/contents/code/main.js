@@ -14,24 +14,17 @@ var blacklist = [
     "spectacle spectacle",
     // Task Switchers
     "kwin_x11 kwin",
-    // Kate was having weird graphical glitches
-    "kate kate",
-    // Unity Game Engine also had graphical glitches
-    "Unity Unity",
 ];
-
-var mouse_x = 0;
-var mouse_y = 0;
 
 function isPopupWindow(window) {
     // If the window is blacklisted, don't animate it.
     if (blacklist.indexOf(window.windowClass) != -1) {
         return false;
     }
-    
+
     // Jetbrains programs also had graphical glitches
-    if(window.windowClass.startsWith('jetbrains')) {
-      return false;
+    if (window.windowClass.startsWith("jetbrains")) {
+        return false;
     }
 
     // Animate combo box popups, tooltips, popup menus, etc.
@@ -64,30 +57,21 @@ function isPopupWindow(window) {
     // this one. In addition to popups, this effect also animates some
     // special windows(e.g. notifications) because the monolithic version
     // was doing that.
-    if (window.dock || window.splash || window.toolbar
-            || window.notification || window.onScreenDisplay
-            || window.criticalNotification) {
+    if (
+        window.dock ||
+        window.splash ||
+        window.toolbar ||
+        window.notification ||
+        window.onScreenDisplay ||
+        window.criticalNotification
+    ) {
         return true;
     }
 
     return false;
 }
 
-function get_fold_constant(window)
-{
-    if(window.hasOwnProperty('fold_constant')) return window.fold_constant;
-    var top = window.y;
-    var bottom = window.y + window.height;
-
-    var top_dist = Math.abs(top - mouse_y);
-    var bottom_dist = Math.abs(bottom - mouse_y);
-    if(top_dist < bottom_dist)
-        window.fold_constant = -1;
-    else
-        window.fold_constant = 1;
-
-    return window.fold_constant;
-}
+let openedAt = 0;
 
 var foldingPopupsEffect = {
     loadConfig: function () {
@@ -106,33 +90,45 @@ var foldingPopupsEffect = {
         if (!effect.grab(window, Effect.WindowAddedGrabRole)) {
             return;
         }
+        openedAt = effects.cursorPos.y;
+        if(openedAt < window.y) openedAt = window.y;
+        else if(openedAt > window.y + window.height) openedAt = window.y + window.height;
+
         window.setData(Effect.WindowForceBlurRole, true);
         window.foldAnimation1 = animate({
             window: window,
             duration: 300,
-            animations: [{
-                type: Effect.Size,
-                to: {
-                    value1: window.width,
-                    value2: window.height
+            animations: [
+                {
+                    type: Effect.Opacity,
+                    to: 1.0,
+                    from: 1.0,
                 },
-                from: {
-                    value1: window.width,
-                    value2: 0
+                {
+                    type: Effect.Size,
+                    to: {
+                        value1: window.width,
+                        value2: window.height,
+                    },
+                    from: {
+                        value1: window.width,
+                        value2: 0,
+                    },
+                    curve: QEasingCurve.OutCubic,
                 },
-                curve: QEasingCurve.OutCubic
-            }, {
-                type: Effect.Translation,
-                to: {
-                    value1: 0,
-                    value2: 0
+                {
+                    type: Effect.Translation,
+                    to: {
+                        value1: 0,
+                        value2: 0,
+                    },
+                    from: {
+                        value1: 0,
+                        value2: openedAt - window.y - (window.height - 0) / 2,
+                    },
+                    curve: QEasingCurve.OutCubic,
                 },
-                from: {
-                    value1: 0,
-                    value2: get_fold_constant(window) * window.height/2
-                },
-                curve: QEasingCurve.OutCubic
-            }]
+            ],
         });
     },
     slotWindowClosed: function (window) {
@@ -150,34 +146,41 @@ var foldingPopupsEffect = {
         }
         window.setData(Effect.WindowForceBlurRole, true);
 
-            window.foldAnimation1 = animate({
+        window.foldAnimation1 = animate({
             window: window,
             duration: 300,
-            animations: [{
-                type: Effect.Size,
-                to: {
-                    value1: window.width,
-                    value2: 0
+            animations: [
+                {
+                    type: Effect.Opacity,
+                    to: 1.0,
+                    from: 1.0,
                 },
-                from: {
-                    value1: window.width,
-                    value2: window.height
+                {
+                    type: Effect.Size,
+                    to: {
+                        value1: window.width,
+                        value2: 0,
+                    },
+                    from: {
+                        value1: window.width,
+                        value2: window.height,
+                    },
+                    curve: QEasingCurve.OutCubic,
                 },
-                curve: QEasingCurve.OutCubic
-            }, {
-                type: Effect.Translation,
-                to: {
-                    value1: 0,
-                    value2: get_fold_constant(window) * window.height/2
+                {
+                    type: Effect.Translation,
+                    to: {
+                        value1: 0,
+                        value2: openedAt - window.y - (window.height - 0) / 2,
+                    },
+                    from: {
+                        value1: 0,
+                        value2: 0,
+                    },
+                    curve: QEasingCurve.OutCubic,
                 },
-                from: {
-                    value1: 0,
-                    value2: 0
-                },
-                curve: QEasingCurve.OutCubic
-            }]
+            ],
         });
-
     },
     slotWindowDataChanged: function (window, role) {
         if (role == Effect.WindowAddedGrabRole) {
@@ -192,19 +195,17 @@ var foldingPopupsEffect = {
             }
         }
     },
-    updateMouse: function(pos, old_pos, buttons, old_buttons, modifiers, old_modifiers){
-        mouse_x = pos.x;
-        mouse_y = pos.y;
-    },
+
     init: function () {
         foldingPopupsEffect.loadConfig();
 
-        effect.configChanged.connect(foldingPopupsEffect.loadConfig);
-        effects.windowAdded.connect(foldingPopupsEffect.slotWindowAdded);
-        effects.windowClosed.connect(foldingPopupsEffect.slotWindowClosed);
-        effects.mouseChanged.connect(foldingPopupsEffect.updateMouse);
-        effects.windowDataChanged.connect(foldingPopupsEffect.slotWindowDataChanged);
-    }
+        effect.configChanged.connect(fadingPopupsEffect.loadConfig);
+        effects.windowAdded.connect(fadingPopupsEffect.slotWindowAdded);
+        effects.windowClosed.connect(fadingPopupsEffect.slotWindowClosed);
+        effects.windowDataChanged.connect(
+            fadingPopupsEffect.slotWindowDataChanged,
+        );
+    },
 };
 
 foldingPopupsEffect.init();
