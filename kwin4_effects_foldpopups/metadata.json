@@ -13,7 +13,7 @@
             }
         ],
         "Icon": "preferences-system-windows-effect-fadingpopups",
-        "Id": "kwin4_effects_foldpopups",
+        "Id": "kwin4_effect_foldpopups",
         "License": "GPL",
         "Version": "1.0",
         "EnabledByDefault": "true",
@@ -21,7 +21,7 @@
     },
     "Type": "Service",
     "X-KDE-Ordering": "60",
-    "X-KDE-PluginKeyword": "kwin4_effects_foldpopups",
+    "X-KDE-PluginKeyword": "kwin4_effect_foldpopups",
     "X-KDE-ConfigModule": "kwin/effects/configs/kcm_kwin4_genericscripted",
     "X-KWin-Config-TranslationDomain": "kwin_effects",
     "X-Plasma-API": "javascript",
