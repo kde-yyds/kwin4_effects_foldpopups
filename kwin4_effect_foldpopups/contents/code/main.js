@@ -14,6 +14,8 @@ var blacklist = [
     "spectacle spectacle",
     // Task Switchers
     "kwin_x11 kwin",
+    // fcitx input method
+    "fcitx fcitx",
 ];
 
 function isPopupWindow(window) {
